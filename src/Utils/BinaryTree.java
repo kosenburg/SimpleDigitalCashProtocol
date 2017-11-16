@@ -4,5 +4,7 @@ public class BinaryTree {
     private Node Root;
 
 
-    public BinaryTree()
+    public BinaryTree() {
+
+    }
 }

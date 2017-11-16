@@ -1,8 +1,9 @@
 package PlaceHolderForBetterName;
-// TODO Will have to be placed in both customer projects so Bob can verify commitment
+
 public class Committer {
-    public static long commit(String commitString, String randomString) {
-        //TODO pick hashing function to perform commit
+    public static long commit(String commitString) {
+        // Generate random string internally?
+        String randomString = ""; //TODO PLace holder
         return hash(commitString, randomString);
     }
 

@@ -1,22 +1,22 @@
 package PlaceHolderForBetterName;
 
 public class Order {
-    private long serialNumber;
+    private String serialNumber;
     private long amount;
     private long commitmentL;
     private long commitmentR;
 
 
-    public Order(long amount, long serialNumber) {
+    public Order(long amount, String serialNumber) {
         setAmount(amount);
         setSerialNumber(serialNumber);
     }
 
-    public long getSerialNumber() {
+    public String getSerialNumber() {
         return serialNumber;
     }
 
-    private void setSerialNumber(long serialNumber) {
+    private void setSerialNumber(String serialNumber) {
         this.serialNumber = serialNumber;
     }
 

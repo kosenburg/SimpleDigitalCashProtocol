@@ -1,8 +1,11 @@
 package PlaceHolderForBetterName;
 
 
-public class SerialNumberFactory {
-    private int seed = 0;
+import java.util.UUID;
 
-    //TODO use persistent storage for serial number generator to make sure no repeats?
+public class SerialNumberFactory {
+
+    public static String getSerialNumber() {
+        return UUID.randomUUID().toString();
+    }
 }

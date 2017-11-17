@@ -1,20 +1,24 @@
 package PlaceHolderForBetterName;
 
-import Utils.Tuple;
 
 import java.io.Serializable;
 import java.util.ArrayList;
 
-//TODO redo order class so is POJO and serializable for tansfer across network
+//TODO redo order class so is POJO and serializable for transfer across network
 public class Order {
     private String serialNumber;
     private long amount;
-    private ArrayList<Commitment> commitments;
+    private ArrayList<String> commitments;
 
 
     public Order(long amount, String serialNumber) {
         setAmount(amount);
         setSerialNumber(serialNumber);
+        setCommitments();
+    }
+
+    private void setCommitments() {
+        commitments = new ArrayList<String>();
     }
 
     public String getSerialNumber() {
@@ -33,13 +37,4 @@ public class Order {
         this.amount = amount;
     }
 
-    public void commitPieces(ArrayList<Tuple> tuples) {
-        for (Tuple tuple: tuples) {
-            Commitment commitment = new Commitment();
-            commitment.setLeftCommit(Committer.commit(tuple.left));
-            commitment.setRightCommit(Committer.commit(tuple.right));
-
-            commitments.add(commitment);
-        }
-    }
 }

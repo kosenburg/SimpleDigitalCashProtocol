@@ -3,15 +3,16 @@ package view;
 import PlaceHolderForBetterName.Order;
 import PlaceHolderForBetterName.SerialNumberFactory;
 import PlaceHolderForBetterName.WordSplitter;
-import Utils.Tuple;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.LinkedList;
+import java.util.Random;
 
 public class Main { //extends Application{
 
@@ -29,7 +30,7 @@ public class Main { //extends Application{
 
     public static void main(String[] args) {
         //launch(args);
-        int amount = Integer.getInteger(args[1]);
+        /*int amount = Integer.getInteger(args[1]);
         LinkedList<Order> orders = new LinkedList<>();
 
         for (int i = 0; i <  amount; i++) {
@@ -44,6 +45,6 @@ public class Main { //extends Application{
         for (Order order: orders) {
             order.commitPieces(tuples);
         }
-
+*/
     }
 }

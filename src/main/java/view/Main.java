@@ -1,50 +1,30 @@
 package view;
 
-import PlaceHolderForBetterName.Order;
-import PlaceHolderForBetterName.SerialNumberFactory;
-import PlaceHolderForBetterName.WordSplitter;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.stage.Stage;
+import model.CustomerInfo;
 
-import java.math.BigInteger;
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.Random;
+public class Main extends Application {
 
-public class Main { //extends Application{
-
-
-
-    /*
     @Override
     public void start(Stage primaryStage) throws Exception{
-        Parent root = FXMLLoader.load(getClass().getResource("view.fxml"));
-        primaryStage.setTitle("Hello World");
-        primaryStage.setScene(new Scene(root, 300, 275));
+        Parent root = FXMLLoader.load(getClass().getResource("/fxml/sample.fxml"));
+        primaryStage.setTitle("Digital Cash Protocol");
+
+        Controller controller = new Controller();
+
+        primaryStage.setScene(controller.getScene());
         primaryStage.show();
     }
-*/
 
     public static void main(String[] args) {
         //launch(args);
-        /*int amount = Integer.getInteger(args[1]);
-        LinkedList<Order> orders = new LinkedList<>();
+        Controller controller = new Controller();
 
-        for (int i = 0; i <  amount; i++) {
-            orders.add(new Order(amount, SerialNumberFactory.getSerialNumber()));
-        }
-
-        String personalInfo = "";
-
-        WordSplitter wordSplitter = new WordSplitter(personalInfo);
-        ArrayList<Tuple> tuples = WordSplitter.getPieces();
-
-        for (Order order: orders) {
-            order.commitPieces(tuples);
-        }
-*/
+        CustomerInfo customerInfo = new CustomerInfo("localhost",33333,"aaaaaaaaaaaa",10);
+        controller.processTransaction(customerInfo);
     }
 }
+

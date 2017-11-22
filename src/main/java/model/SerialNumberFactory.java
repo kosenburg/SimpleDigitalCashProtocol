@@ -1,4 +1,4 @@
-package PlaceHolderForBetterName;
+package model;
 
 
 import java.util.UUID;

@@ -1,14 +1,14 @@
-package PlaceHolderForBetterName;
+package model;
 
 
 import java.io.Serializable;
 import java.util.ArrayList;
 
 //TODO redo order class so is POJO and serializable for transfer across network
-public class Order {
+public class Order implements Serializable{
     private String serialNumber;
     private long amount;
-    private ArrayList<String> commitments;
+    private ArrayList<byte[]> commitments;
 
 
     public Order(long amount, String serialNumber) {
@@ -18,7 +18,7 @@ public class Order {
     }
 
     private void setCommitments() {
-        commitments = new ArrayList<String>();
+        commitments = new ArrayList<byte[]>();
     }
 
     public String getSerialNumber() {
@@ -35,6 +35,15 @@ public class Order {
 
     private void setAmount(long amount) {
         this.amount = amount;
+    }
+
+    public void addCommitment(byte[] leftCommit, byte[] rightCommit) {
+        commitments.add(leftCommit);
+        commitments.add(rightCommit);
+    }
+
+    public byte [][] getCommitment(int i) {
+        return new byte [][] {commitments.get(i), commitments.get(i+1)};
     }
 
 }

@@ -1,4 +1,4 @@
-package PlaceHolderForBetterName;
+package model;
 
 import java.util.ArrayList;
 
@@ -21,7 +21,7 @@ public class WordSplitter {
     }
 
     private void splitIntoPieces() {
-        if (personalString.length() < MIN_SIZE) {
+        if (personalString.length() < MIN_SIZE || personalString.length() % 2 != 0) {
             throw new IllegalArgumentException();
         } else {
             split(personalString, 0);

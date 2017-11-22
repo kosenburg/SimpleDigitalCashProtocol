@@ -1,4 +1,4 @@
-package PlaceHolderForBetterName;
+package model;
 
 public class IdentityStringFactory {
 

@@ -1,16 +1,13 @@
 package view;
 
-import PlaceHolderForBetterName.Order;
-import PlaceHolderForBetterName.SerialNumberFactory;
-import PlaceHolderForBetterName.WordSplitter;
-import javafx.application.Application;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
-import javafx.stage.Stage;
+import model.Committer;
+import model.Order;
+import model.SerialNumberFactory;
+import model.WordSplitter;
 
 import java.math.BigInteger;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.Random;
 
@@ -30,21 +27,40 @@ public class Main { //extends Application{
 
     public static void main(String[] args) {
         //launch(args);
-        /*int amount = Integer.getInteger(args[1]);
+        String ID = "myIDmyIDmyID";
+        long amount = 4;
+
+
+        String serialNumber = SerialNumberFactory.getSerialNumber();
+        WordSplitter wordSplitter = new WordSplitter(ID);
+        ArrayList<String> splittedID = wordSplitter.getPieces();
+
+
+        BigInteger randomKey  = new BigInteger(128,new Random());
+        Committer committer = new Committer(new String(randomKey.toByteArray()));
+
+
+        ArrayList<byte[]> commits = new ArrayList<>();
+        for(int i = 0; i < splittedID.size(); i+=2) {
+            commits.add(i, committer.commit(splittedID.get(i)));
+            commits.add(i +1, committer.commit(splittedID.get(i+1)));
+        }
+
+        for(byte[] array: commits) {
+            System.out.println(Arrays.toString(array));
+        }
+
+
         LinkedList<Order> orders = new LinkedList<>();
-
-        for (int i = 0; i <  amount; i++) {
-            orders.add(new Order(amount, SerialNumberFactory.getSerialNumber()));
+        for (int i = 0; i < amount; i++) {
+            Order tempOrder = new Order(amount, serialNumber);
+            for(int j = 0; j < commits.size(); j+=2) {
+                tempOrder.addCommitment(commits.get(j), commits.get(j+1));
+            }
+            orders.add(tempOrder);
         }
 
-        String personalInfo = "";
+        System.out.println(orders.size());
 
-        WordSplitter wordSplitter = new WordSplitter(personalInfo);
-        ArrayList<Tuple> tuples = WordSplitter.getPieces();
-
-        for (Order order: orders) {
-            order.commitPieces(tuples);
-        }
-*/
     }
 }

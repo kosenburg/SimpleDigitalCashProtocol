@@ -26,7 +26,6 @@ public class WordSplitter {
         } else {
             split(personalString, 0);
         }
-        displayPieces();
     }
 
     public void displayPieces() {

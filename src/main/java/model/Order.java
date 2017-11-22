@@ -4,11 +4,11 @@ package model;
 import java.io.Serializable;
 import java.util.ArrayList;
 
-//TODO redo order class so is POJO and serializable for transfer across network
 public class Order implements Serializable{
     private String serialNumber;
     private long amount;
     private ArrayList<byte[]> commitments;
+    private String signature;
 
 
     public Order(long amount, String serialNumber) {
@@ -42,8 +42,17 @@ public class Order implements Serializable{
         commitments.add(rightCommit);
     }
 
-    public byte [][] getCommitment(int i) {
-        return new byte [][] {commitments.get(i), commitments.get(i+1)};
+    //TODO fix
+    public ArrayList<byte[]> getCommitment() {
+    //    return new byte [][] {commitments.get(i), commitments.get(i+1)};
+        return commitments;
     }
 
+    public String getSignature() {
+        return signature;
+    }
+
+    public void setSignature(String signature) {
+        this.signature = signature;
+    }
 }

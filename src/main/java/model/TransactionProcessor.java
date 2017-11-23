@@ -12,7 +12,6 @@ public class TransactionProcessor {
     private LinkedList<Order> moneyOrders;
     private ArrayList<String> identityPieces;
     private ArrayList<byte[]> commits;
-    private String signature;
 
     public TransactionProcessor(CustomerInfo customerInfo) {
         this.customerInfo = customerInfo;
@@ -27,15 +26,8 @@ public class TransactionProcessor {
         setCommits();
         setMoneyOrders();
         sendToBank();
-        setOrderSignatures();
-        sendToVendor();
+        //sendToVendor();
         System.out.println("Done");
-    }
-
-    private void setOrderSignatures() {
-        for (Order order: moneyOrders) {
-            order.setSignature(signature);
-        }
     }
 
     private void setMoneyOrders() {
@@ -97,7 +89,7 @@ public class TransactionProcessor {
 
     private void setSignature(InputStream inputStream) throws IOException {
         BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
-        signature = bufferedReader.readLine();
+        String signature = bufferedReader.readLine();
         System.out.println(signature);
     }
 }

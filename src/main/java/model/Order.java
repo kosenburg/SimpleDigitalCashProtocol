@@ -8,6 +8,7 @@ public class Order implements Serializable{
     private String serialNumber;
     private long amount;
     private ArrayList<byte[]> commitments;
+    private String blind;
     private String signature;
 
 
@@ -15,6 +16,10 @@ public class Order implements Serializable{
         setAmount(amount);
         setSerialNumber(serialNumber);
         setCommitments();
+    }
+
+    private void setBlind(String message) {
+
     }
 
     private void setCommitments() {

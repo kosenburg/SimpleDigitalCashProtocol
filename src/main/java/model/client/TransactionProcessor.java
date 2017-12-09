@@ -3,51 +3,54 @@ package model.client;
 import model.bank.Bank;
 import model.datastructures.CustomerInfo;
 import model.datastructures.Order;
+import model.datastructures.Pair;
 import model.vendor.Vendor;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
 
 public class TransactionProcessor {
     private final CustomerInfo customerInfo;
     private Bank bank;
     private MoneyOrderBuilder moneyOrderBuilder;
-    private LinkedList<Order> moneyOrders;
+    private ArrayList<Order> moneyOrders;
     private Order signedOrder;
     private Vendor vendor;
+    private ArrayList<Pair> revealedStrings;
 
 
     public TransactionProcessor(CustomerInfo customerInfo, Bank bank, Vendor vendor) {
         this.customerInfo = customerInfo;
         this.bank = bank;
         this.vendor = vendor;
-        buildMoneyOrders(customerInfo);
-    }
-
-    private void buildMoneyOrders(CustomerInfo customerInfo) {
-        moneyOrderBuilder = new MoneyOrderBuilder(customerInfo, bank.getPublicKey());
-        moneyOrders = moneyOrderBuilder.generateMoneyOrders();
     }
 
     public void process() {
+        buildMoneyOrders();
         sendToBankForSig();
         removeBlind();
         sendToVendor();
+        sendToBankForVerification();
     }
 
-    private void removeBlind() {
-        moneyOrderBuilder.removeBlind(signedOrder);
+    private void buildMoneyOrders() {
+        moneyOrderBuilder = new MoneyOrderBuilder(customerInfo, bank.getPublicKey());
+        moneyOrders = moneyOrderBuilder.generateMoneyOrders();
     }
 
     private void sendToBankForSig() {
         signedOrder = bank.sign(moneyOrders);
     }
 
+    private void removeBlind() {
+        moneyOrderBuilder.removeBlind(signedOrder);
+    }
 
     private void sendToVendor() {
-        sendToBankForVerification();
+        revealedStrings = moneyOrderBuilder.getRequestedIdentityStrings(vendor.getIdentityStringChoices());
     }
 
     private void sendToBankForVerification() {
-        boolean result = bank.verify(signedOrder);
+        boolean result = bank.verify(signedOrder, revealedStrings);
     }
 }

@@ -7,16 +7,15 @@ import java.util.ArrayList;
 public class Order implements Serializable{
     private String serialNumber;
     private int amount;
-    private ArrayList<byte[]> commitments;
+    private ArrayList<Pair> identityCommits;
     private byte[] message;
     private byte[] signature;
 
-
-    public Order(int amount, String serialNumber, byte[] message) {
+    public Order(int amount, String serialNumber, byte[] message, ArrayList<Pair> identityCommits) {
         setAmount(amount);
         setSerialNumber(serialNumber);
         setMessage(message);
-        setCommitments();
+        setIdentityCommits(identityCommits);
     }
 
     public void setSignature(byte[] signature) {
@@ -24,8 +23,8 @@ public class Order implements Serializable{
     }
 
 
-    private void setCommitments() {
-        commitments = new ArrayList<byte[]>();
+    private void setIdentityCommits(ArrayList<Pair> identityCommits) {
+        this.identityCommits = identityCommits;
     }
 
     public String getSerialNumber() {
@@ -44,15 +43,16 @@ public class Order implements Serializable{
         this.amount = amount;
     }
 
-    public void addCommitment(byte[] leftCommit, byte[] rightCommit) {
-        commitments.add(leftCommit);
-        commitments.add(rightCommit);
-    }
+    public byte[] getCommitment(int pair, int piece) {
+        Pair identityCommit = identityCommits.get(pair);
 
-    //TODO fix
-    public ArrayList<byte[]> getCommitment() {
-    //    return new byte [][] {commitments.get(i), commitments.get(i+1)};
-        return commitments;
+        if (piece == 0) {
+            return identityCommit.getRight();
+        } else if (piece == 1) {
+            return identityCommit.getLeft();
+        } else {
+            throw new IllegalArgumentException();
+        }
     }
 
     public byte[] getSignature() {

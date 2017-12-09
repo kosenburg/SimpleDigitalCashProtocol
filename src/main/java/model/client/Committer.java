@@ -25,8 +25,8 @@ public class Committer {
         }
     }
 
-    public byte[] commit(String commitString) {
-        return mac.doFinal(commitString.getBytes());
+    public byte[] commit(byte[] commitString) {
+        return mac.doFinal(commitString);
     }
 
 }

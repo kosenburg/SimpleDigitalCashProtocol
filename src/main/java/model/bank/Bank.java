@@ -1,5 +1,6 @@
 package model.bank;
 
+import model.datastructures.Pair;
 import model.datastructures.Order;
 import org.bouncycastle.crypto.AsymmetricCipherKeyPair;
 import org.bouncycastle.crypto.digests.SHA1Digest;
@@ -9,13 +10,12 @@ import org.bouncycastle.crypto.signers.PSSSigner;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.LinkedList;
 
 public class Bank {
     private AsymmetricCipherKeyPair keys;
     private int invalidFlag = 0;
     private HashMap<String, Integer> accounts;
-    private HashMap<String, ArrayList<byte[]>> seenStrings;
+    private HashMap<String, ArrayList<Pair>> seenStrings;
 
 
     public Bank(AsymmetricCipherKeyPair keys) {
@@ -39,12 +39,12 @@ public class Bank {
         return (RSAKeyParameters) keys.getPublic();
     }
 
-    public Order sign(LinkedList<Order> orders) {
+    public Order sign(ArrayList<Order> orders) {
         checkOrderAmounts(orders);
         Order signedOrder = null;
 
         if (invalidFlag == 0) {
-            signedOrder = orders.getLast();
+            signedOrder = orders.get(orders.size()-1);
             deductFromCustomerAccount(signedOrder.getAmount());
 
             byte[] message = signedOrder.getMessage();
@@ -57,14 +57,7 @@ public class Bank {
 
     }
 
-    private void checkInfo(Order signedOrder) {
-        if (seenStrings.get(signedOrder.getSerialNumber())== null) {
-            seenStrings.put(signedOrder.getSerialNumber(), signedOrder.getCommitment());
-        } else {
-            //TODO better wait to invalidate
-            System.out.println("See order before!");
-        }
-    }
+
 
     public void displayAccountValues() {
         System.out.println("Account values: ");
@@ -77,8 +70,8 @@ public class Bank {
         accounts.put("Customer", newAccountValue);
     }
 
-    private void checkOrderAmounts(LinkedList<Order> orders) {
-        Order firstOrder = orders.getFirst();
+    private void checkOrderAmounts(ArrayList<Order> orders) {
+        Order firstOrder = orders.get(0);
         for (int i = 0; i <= orders.size() - 2; i++) {
             if (orders.get(i).getAmount() != firstOrder.getAmount()) {
                 //TODO something to fail and halt execution
@@ -88,8 +81,8 @@ public class Bank {
 
     }
 
-    public boolean verify(Order signedOrder) {
-        checkInfo(signedOrder);
+    public boolean verify(Order signedOrder, ArrayList<Pair> revealedStrings) {
+        checkInfo(signedOrder.getSerialNumber(), revealedStrings);
         byte[] message = signedOrder.getMessage();
         byte[] signature = signedOrder.getSignature();
 
@@ -99,4 +92,74 @@ public class Bank {
         signer.update(message, 0, message.length);
         return signer.verifySignature(signature);
     }
+
+    private void checkInfo(String serialNumber, ArrayList<Pair> revealedStrings) {
+        if (seenStrings.get(serialNumber) == null) {
+            seenStrings.put(serialNumber, revealedStrings);
+        } else if (seenStrings.get(serialNumber) != null) {
+            checkForFraud(seenStrings.get(serialNumber), revealedStrings);
+
+            //TODO better wait to invalidate
+            System.out.println("See order before!");
+        }
+    }
+
+    private void checkForFraud(ArrayList<Pair> storedStrings, ArrayList<Pair> revealedStrings) {
+        if (isVendorCheating(storedStrings, revealedStrings)) {
+            // throw exception?
+        } else {
+            fillStoredStringsWithNewIDInfo(storedStrings,revealedStrings);
+            constructIdentity(storedStrings);
+            // customer cheating with serial number
+        }
+    }
+
+    private void constructIdentity(ArrayList<Pair> storedStrings) {
+        String identity = "";
+        for (Pair pair: storedStrings) {
+            identity += "(" + new String(pair.getLeft()) + ", " + new String(pair.getRight()) + ")";
+        }
+        System.out.println("Identity is:");
+        System.out.println(identity);
+    }
+
+    private void fillStoredStringsWithNewIDInfo(ArrayList<Pair> storedStrings, ArrayList<Pair> revealedStrings) {
+        for (int i = 0; i  < revealedStrings.size(); i++) {
+            Pair revealedPair = revealedStrings.get(i);
+            Pair storedPair = storedStrings.get(i);
+            if (revealedPair.getRight() != null && storedPair.getRight() != null) {
+                if (revealedPair.getRight() != storedPair.getRight()) {
+                    storedPair.setRight(revealedPair.getRight());
+                }
+            }
+
+            if (revealedPair.getLeft() != null && storedPair.getLeft() != null) {
+                if (revealedPair.getLeft() != storedPair.getLeft()) {
+                    storedPair.setLeft(revealedPair.getLeft());
+                }
+            }
+        }
+    }
+
+    private boolean isVendorCheating(ArrayList<Pair> storedStrings, ArrayList<Pair> revealedStrings) {
+        for (int i = 0; i  < revealedStrings.size(); i++) {
+            Pair revealedPair = revealedStrings.get(i);
+            Pair storedPair = storedStrings.get(i);
+            if (revealedPair.getRight() != null && storedPair.getRight() != null) {
+                if (revealedPair.getRight() != storedPair.getRight()) {
+                    return false;
+                }
+            }
+
+            if (revealedPair.getLeft() != null && storedPair.getLeft() != null) {
+                if (revealedPair.getLeft() != storedPair.getLeft()) {
+                    return false;
+                }
+            }
+        }
+        return true;
+
+    }
 }
+
+

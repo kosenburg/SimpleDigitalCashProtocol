@@ -2,17 +2,19 @@ package model.client;
 
 
 import model.client.WordSplitter;
+import org.junit.jupiter.api.Test;
 
-public class WordSplitterTest {
+class WordSplitterTest {
+    @Test
     public void getPieces() throws Exception {
         //TODO develop test for pieces function
         String evenTest = "EvenLength";
-        String oddTest = "OddLengthsOddLengthss";
+        //String oddTest = "OddLengthsOddLengthss";
 
-        WordSplitter wordSplitter = new WordSplitter(oddTest);
+        WordSplitter wordSplitter = new WordSplitter(evenTest);
 
 //        Assert.assertEquals(evenTest.length() / 4, wordSplitter.getPieces().size());
-        wordSplitter.getPieces();
+        System.out.println(wordSplitter.getPieces());
 
 
         /*String oddTest = "OddLengthsOddLengthss";

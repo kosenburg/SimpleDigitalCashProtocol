@@ -7,6 +7,7 @@ import org.bouncycastle.crypto.params.RSAKeyParameters;
 import org.bouncycastle.crypto.engines.RSAEngine;
 import org.bouncycastle.crypto.signers.PSSSigner;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
 
@@ -14,7 +15,7 @@ public class Bank {
     private AsymmetricCipherKeyPair keys;
     private int invalidFlag = 0;
     private HashMap<String, Integer> accounts;
-    private HashMap<String, String> seenStrings;
+    private HashMap<String, ArrayList<byte[]>> seenStrings;
 
 
     public Bank(AsymmetricCipherKeyPair keys) {
@@ -40,7 +41,6 @@ public class Bank {
 
     public Order sign(LinkedList<Order> orders) {
         checkOrderAmounts(orders);
-
         Order signedOrder = null;
 
         if (invalidFlag == 0) {
@@ -55,6 +55,15 @@ public class Bank {
 
         return signedOrder;
 
+    }
+
+    private void checkInfo(Order signedOrder) {
+        if (seenStrings.get(signedOrder.getSerialNumber())== null) {
+            seenStrings.put(signedOrder.getSerialNumber(), signedOrder.getCommitment());
+        } else {
+            //TODO better wait to invalidate
+            System.out.println("See order before!");
+        }
     }
 
     public void displayAccountValues() {
@@ -80,14 +89,14 @@ public class Bank {
     }
 
     public boolean verify(Order signedOrder) {
-        byte[] message = signedOrder.getMessage()
+        checkInfo(signedOrder);
+        byte[] message = signedOrder.getMessage();
         byte[] signature = signedOrder.getSignature();
 
         PSSSigner signer = new PSSSigner(new RSAEngine(), new SHA1Digest(), 20);
         signer.init(false, keys.getPublic());
 
         signer.update(message, 0, message.length);
-
         return signer.verifySignature(signature);
     }
 }

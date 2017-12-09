@@ -1,4 +1,4 @@
-package model;
+package model.client;
 
 import model.client.Committer;
 import org.junit.jupiter.api.Assertions;

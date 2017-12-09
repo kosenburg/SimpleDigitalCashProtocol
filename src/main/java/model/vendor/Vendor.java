@@ -10,6 +10,7 @@ public class Vendor {
     }
 
     public byte[] process() {
+    return null;
     }
 
 }

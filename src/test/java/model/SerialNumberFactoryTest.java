@@ -1,6 +1,8 @@
 package model;
 
 
+import model.client.SerialNumberFactory;
+
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 

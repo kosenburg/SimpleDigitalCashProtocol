@@ -1,4 +1,4 @@
-package model;
+package model.datastructures;
 
 
 import java.io.Serializable;
@@ -6,21 +6,23 @@ import java.util.ArrayList;
 
 public class Order implements Serializable{
     private String serialNumber;
-    private long amount;
+    private int amount;
     private ArrayList<byte[]> commitments;
-    private String blind;
-    private String signature;
+    private byte[] message;
+    private byte[] signature;
 
 
-    public Order(long amount, String serialNumber) {
+    public Order(int amount, String serialNumber, byte[] message) {
         setAmount(amount);
         setSerialNumber(serialNumber);
+        setMessage(message);
         setCommitments();
     }
 
-    private void setBlind(String message) {
-
+    public void setSignature(byte[] signature) {
+        this.signature = signature;
     }
+
 
     private void setCommitments() {
         commitments = new ArrayList<byte[]>();
@@ -34,11 +36,11 @@ public class Order implements Serializable{
         this.serialNumber = serialNumber;
     }
 
-    public long getAmount() {
+    public int getAmount() {
         return amount;
     }
 
-    private void setAmount(long amount) {
+    private void setAmount(int amount) {
         this.amount = amount;
     }
 
@@ -53,11 +55,15 @@ public class Order implements Serializable{
         return commitments;
     }
 
-    public String getSignature() {
+    public byte[] getSignature() {
         return signature;
     }
 
-    public void setSignature(String signature) {
-        this.signature = signature;
+    public byte[] getMessage() {
+        return message;
+    }
+
+    public void setMessage(byte[] message) {
+        this.message = message;
     }
 }

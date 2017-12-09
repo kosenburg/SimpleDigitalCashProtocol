@@ -23,7 +23,8 @@ public class Main extends Application {
         /*Controller controller = new Controller();
 
         CustomerInfo customerInfo = new CustomerInfo("localhost",33333,"aaaaaaaaaaaa",10);
-        controller.processTransaction(customerInfo);*/
+        controller.processTransaction(customerInfo);
+*/
     }
 }
 

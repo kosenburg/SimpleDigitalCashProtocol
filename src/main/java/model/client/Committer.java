@@ -1,4 +1,4 @@
-package model;
+package model.client;
 
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;

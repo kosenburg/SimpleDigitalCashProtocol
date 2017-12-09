@@ -1,4 +1,4 @@
-package model;
+package model.datastructures;
 
 public class CustomerInfo {
     private String bankIP;

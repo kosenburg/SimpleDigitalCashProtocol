@@ -1,6 +1,7 @@
 package model;
 
 
+import model.client.WordSplitter;
 
 public class WordSplitterTest {
     public void getPieces() throws Exception {

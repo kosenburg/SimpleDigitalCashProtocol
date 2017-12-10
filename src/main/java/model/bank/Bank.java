@@ -13,16 +13,15 @@ import java.util.HashMap;
 
 public class Bank {
     private AsymmetricCipherKeyPair keys;
-    private int invalidFlag = 0;
     private HashMap<String, Integer> accounts;
     private HashMap<String, ArrayList<Pair>> seenStrings;
+    private String cheater;
 
 
     public Bank(AsymmetricCipherKeyPair keys) {
         this.keys = keys;
         setupAccounts();
         setSeenStrings();
-
     }
 
     private void setSeenStrings() {
@@ -40,21 +39,20 @@ public class Bank {
     }
 
     public Order sign(ArrayList<Order> orders) {
-        checkOrderAmounts(orders);
-        Order signedOrder = null;
+        boolean areValidOrders = checkOrderAmounts(orders);
 
-        if (invalidFlag == 0) {
-            signedOrder = orders.get(orders.size()-1);
+        if (!areValidOrders) {
+            return null;
+        } else {
+            Order signedOrder = orders.get(orders.size() - 1);
             deductFromCustomerAccount(signedOrder.getAmount());
 
             byte[] message = signedOrder.getMessage();
             RSAEngine engine = new RSAEngine();
             engine.init(true, keys.getPrivate());
             signedOrder.setSignature(engine.processBlock(message, 0, message.length));
+            return signedOrder;
         }
-
-        return signedOrder;
-
     }
 
     public int getAccountBalance(String name) {
@@ -69,15 +67,24 @@ public class Bank {
         }
     }
 
+    public void displayCheater() {
+        System.out.println("Cheater: " + cheater);
+    }
+
     public void displayAccountValues() {
         System.out.println("Account values: ");
-        System.out.println(" Customer: " + accounts.get("Customer"));
+        System.out.println("Customer: " + accounts.get("Customer"));
         System.out.println("Vendor: " + accounts.get("Vendor") + "\n");
     }
 
-    public void deductFromCustomerAccount(int amount) {
+    public boolean deductFromCustomerAccount(int amount) {
         int newAccountValue = accounts.get("Customer") - amount;
-        accounts.put("Customer", newAccountValue);
+        if (newAccountValue < 0) {
+            return false;
+        } else {
+            accounts.put("Customer", newAccountValue);
+            return true;
+        }
     }
 
     public void addToVendorAccount(int amount) {
@@ -85,55 +92,57 @@ public class Bank {
         accounts.put("Vendor", newAccountValue);
     }
 
-    private void checkOrderAmounts(ArrayList<Order> orders) {
+    private boolean checkOrderAmounts(ArrayList<Order> orders) {
         Order firstOrder = orders.get(0);
         for (int i = 0; i <= orders.size() - 2; i++) {
             if (orders.get(i).getAmount() != firstOrder.getAmount()) {
-                //TODO something to fail and halt execution
-                invalidFlag = 1;
+                return false;
             }
         }
-
+        return true;
     }
 
     public boolean verify(Order signedOrder, ArrayList<Pair> revealedStrings) {
-        checkInfo(signedOrder.getSerialNumber(), revealedStrings);
-        byte[] message = signedOrder.getMessage();
-        byte[] signature = signedOrder.getSignature();
+        boolean isValidOrder = checkInfo(signedOrder.getSerialNumber(), revealedStrings);
 
+        if (isValidOrder) {
+            return isValidSignature(signedOrder);
+        } else {
+            return false;
+        }
+    }
+
+    private boolean isValidSignature(Order signedOrder) {
         PSSSigner signer = new PSSSigner(new RSAEngine(), new SHA1Digest(), 20);
         signer.init(false, keys.getPublic());
 
-        signer.update(message, 0, message.length);
-
-        if (signer.verifySignature(signature)) {
-            accounts.put("Vendor", accounts.get("Vendor") + signedOrder.getAmount());
-            return true;
-        } else
-            return false;
+        signer.update(signedOrder.getMessage(), 0, signedOrder.getMessage().length);
+        return signer.verifySignature(signedOrder.getSignature());
     }
 
-    private void checkInfo(String serialNumber, ArrayList<Pair> revealedStrings) {
+
+    private boolean checkInfo(String serialNumber, ArrayList<Pair> revealedStrings) {
+        cheater = null;
         if (seenStrings.get(serialNumber) == null) {
             seenStrings.put(serialNumber, revealedStrings);
-        } else if (seenStrings.get(serialNumber) != null) {
-            checkForFraud(seenStrings.get(serialNumber), revealedStrings);
-
-            //TODO better wait to invalidate
-            System.out.println("See order before!");
-        }
-    }
-
-
-    private void checkForFraud(ArrayList<Pair> storedStrings, ArrayList<Pair> revealedStrings) {
-        if (isVendorCheating(storedStrings, revealedStrings)) {
-            // throw exception?
+            return true;
         } else {
-            fillStoredStringsWithNewIDInfo(storedStrings,revealedStrings);
-            constructIdentity(storedStrings);
-            // customer cheating with serial number
+            determineCheater(seenStrings.get(serialNumber), revealedStrings);
+            return false;
         }
     }
+
+
+    private void determineCheater(ArrayList<Pair> storedStrings, ArrayList<Pair> revealedStrings) {
+        if (isVendorCheating(storedStrings, revealedStrings)) {
+            cheater = "Vendor";
+        } else {
+            fillStoredStringsWithNewIDInfo(storedStrings, revealedStrings);
+            constructIdentity(storedStrings);
+            cheater = "Customer";
+        }
+    }
+
 
     private void constructIdentity(ArrayList<Pair> storedStrings) {
         String identity = "";
@@ -163,7 +172,7 @@ public class Bank {
     }
 
     private boolean isVendorCheating(ArrayList<Pair> storedStrings, ArrayList<Pair> revealedStrings) {
-        for (int i = 0; i  < revealedStrings.size(); i++) {
+        for (int i = 0; i < revealedStrings.size(); i++) {
             Pair revealedPair = revealedStrings.get(i);
             Pair storedPair = storedStrings.get(i);
             if (revealedPair.getRight() != null && storedPair.getRight() != null) {
@@ -182,5 +191,7 @@ public class Bank {
 
     }
 }
+
+
 
 

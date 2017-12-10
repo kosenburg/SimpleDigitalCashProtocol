@@ -4,6 +4,7 @@ import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.stage.Stage;
+import model.datastructures.CustomerInfo;
 
 public class Main extends Application {
 
@@ -19,12 +20,11 @@ public class Main extends Application {
     }
 
     public static void main(String[] args) {
-        launch(args);
-        /*Controller controller = new Controller();
+        //launch(args);
+        Controller controller = new Controller();
 
-        CustomerInfo customerInfo = new CustomerInfo("localhost",33333,"aaaaaaaaaaaa",10);
+        CustomerInfo customerInfo = new CustomerInfo("0123456789", 10);
         controller.processTransaction(customerInfo);
-*/
     }
 }
 

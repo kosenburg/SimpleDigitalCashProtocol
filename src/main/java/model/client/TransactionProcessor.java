@@ -31,6 +31,7 @@ public class TransactionProcessor {
         removeBlind();
         sendToVendor();
         sendToBankForVerification();
+        bank.displayAccountValues();
     }
 
     private void buildMoneyOrders() {
@@ -53,5 +54,10 @@ public class TransactionProcessor {
 
     private void sendToBankForVerification() {
         boolean result = bank.verify(signedOrder, revealedStrings);
+        if (result) {
+            bank.addToVendorAccount(signedOrder.getAmount());
+        } else {
+            bank.displayCheater();
+        }
     }
 }

@@ -30,15 +30,15 @@ public class WordSplitter {
             split(personalString, 0);
             fillListOfPairs();
             pieces = null;
-            System.out.println("Pairs list filled.");
+            //System.out.println("Pairs list filled.");
         }
     }
 
     private void fillListOfPairs() {
-        System.out.println("Filling list of pairs..");
+        //System.out.println("Filling list of pairs..");
         pairs = new ArrayList<>();
         for (int i = 0; i < pieces.size(); i+=2) {
-            System.out.println("Left: " + pieces.get(i)+ " Right: " + pieces.get(i+1));
+          //  System.out.println("Left: " + pieces.get(i)+ " Right: " + pieces.get(i+1));
             pairs.add(new Pair(pieces.get(i).getBytes(), pieces.get(i+1).getBytes()));
         }
     }

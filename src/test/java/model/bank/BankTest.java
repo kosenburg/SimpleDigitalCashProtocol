@@ -35,7 +35,7 @@ class BankTest {
     @Test
     void displayAccountValues() {
         Bank bank = new Bank(Util.generateKeyPair());
-        bank.displayAccountValues();
+        //bank.displayAccountValues();
     }
 
     @Test
@@ -51,10 +51,30 @@ class BankTest {
         Vendor vendor = new Vendor();
         vendor.setOrder(signedOrder);
 
-        bank.displayAccountValues();
+        ArrayList<Pair> pairs = moneyOrderBuilder.getRequestedIdentityStrings(vendor.getIdentityStringChoices());
+        Assertions.assertTrue(bank.verify(signedOrder, pairs));
+    }
+
+    @Test
+    void cheater() {
+        int amount = 5;
+        CustomerInfo customerInfo = new CustomerInfo("0123456789", amount);
+        Bank bank = new Bank(Util.generateKeyPair());
+        MoneyOrderBuilder moneyOrderBuilder = new MoneyOrderBuilder(customerInfo, bank.getPublicKey());
+        ArrayList<Order> moneyOrders = moneyOrderBuilder.generateMoneyOrders();
+        Order signedOrder = bank.sign(moneyOrders);
+        signedOrder = moneyOrderBuilder.removeBlind(signedOrder);
+
+        Vendor vendor = new Vendor();
+        vendor.setOrder(signedOrder);
+
+
         ArrayList<Pair> pairs = moneyOrderBuilder.getRequestedIdentityStrings(vendor.getIdentityStringChoices());
         System.out.println("Verification results: " + bank.verify(signedOrder, pairs));
-        bank.displayAccountValues();
+
+        System.out.println("Second verification results:" + bank.verify(signedOrder,pairs));
+        bank.displayCheater();
+        Assertions.assertFalse(bank.verify(signedOrder,pairs));
     }
 
 }

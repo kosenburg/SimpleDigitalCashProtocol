@@ -1,4 +1,4 @@
-package model;
+package model.datastructures;
 
 public class CustomerInfo {
     private String bankIP;
@@ -17,9 +17,7 @@ public class CustomerInfo {
         this.amount = amount;
     }
 
-    public CustomerInfo(String bankIP, int bankPort, String customerID, int amount) {
-        this.bankIP = bankIP;
-        this.bankPort = bankPort;
+    public CustomerInfo(String customerID, int amount) {
         this.customerID = customerID;
         this.amount = amount;
     }

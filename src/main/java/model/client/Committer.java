@@ -1,4 +1,4 @@
-package model;
+package model.client;
 
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
@@ -25,8 +25,8 @@ public class Committer {
         }
     }
 
-    public byte[] commit(String commitString) {
-        return mac.doFinal(commitString.getBytes());
+    public byte[] commit(byte[] commitString) {
+        return mac.doFinal(commitString);
     }
 
 }

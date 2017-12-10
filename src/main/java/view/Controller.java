@@ -1,16 +1,35 @@
 package view;
 
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.scene.Scene;
-import model.CustomerInfo;
-import model.TransactionProcessor;
+import model.bank.Bank;
+import model.bank.Util;
+import model.datastructures.CustomerInfo;
+import model.client.TransactionProcessor;
+import model.vendor.Vendor;
 
 public class Controller {
     private SceneGenerator sceneGenerator;
+    private Bank bank;
+    private Vendor vendor;
+    private MessageCollector messageCollector;
 
     public Controller() {
         setSceneGenerator();
+        setBank();
+        setVendor();
+        setMessageCollector();
+    }
+
+    private void setMessageCollector() {
+        messageCollector = new MessageCollector(sceneGenerator);
+    }
+
+    private void setVendor() {
+        vendor = new Vendor();
+    }
+
+    private void setBank() {
+        bank = new Bank(Util.generateKeyPair());
     }
 
     private void setSceneGenerator() {
@@ -22,7 +41,7 @@ public class Controller {
     }
 
     public void processTransaction(CustomerInfo customerInfo) {
-        TransactionProcessor transactionProcessor = new TransactionProcessor(customerInfo);
+        TransactionProcessor transactionProcessor = new TransactionProcessor(customerInfo, bank, vendor, messageCollector);
         transactionProcessor.process();
     }
 }

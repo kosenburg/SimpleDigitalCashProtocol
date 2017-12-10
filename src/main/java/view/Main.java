@@ -20,11 +20,12 @@ public class Main extends Application {
     }
 
     public static void main(String[] args) {
-        //launch(args);
-        Controller controller = new Controller();
+        launch(args);
+        /*Controller controller = new Controller();
 
         CustomerInfo customerInfo = new CustomerInfo("0123456789", 10);
         controller.processTransaction(customerInfo);
+    */
     }
 }
 

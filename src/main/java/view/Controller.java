@@ -11,11 +11,17 @@ public class Controller {
     private SceneGenerator sceneGenerator;
     private Bank bank;
     private Vendor vendor;
+    private MessageCollector messageCollector;
 
     public Controller() {
         setSceneGenerator();
         setBank();
         setVendor();
+        setMessageCollector();
+    }
+
+    private void setMessageCollector() {
+        messageCollector = new MessageCollector(sceneGenerator);
     }
 
     private void setVendor() {
@@ -35,7 +41,7 @@ public class Controller {
     }
 
     public void processTransaction(CustomerInfo customerInfo) {
-        TransactionProcessor transactionProcessor = new TransactionProcessor(customerInfo, bank, vendor);
+        TransactionProcessor transactionProcessor = new TransactionProcessor(customerInfo, bank, vendor, messageCollector);
         transactionProcessor.process();
     }
 }

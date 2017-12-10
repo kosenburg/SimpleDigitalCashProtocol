@@ -56,8 +56,6 @@ public class Bank {
     }
 
     public int getAccountBalance(String name) {
-        int value = accounts.get(name);
-
         if (name.equals("Customer")) {
             return accounts.get("Customer");
         } else if (name.equals("Vendor")) {
@@ -65,6 +63,10 @@ public class Bank {
         } else {
             throw new IllegalArgumentException();
         }
+    }
+
+    public String getCheater() {
+        return cheater;
     }
 
     public void displayCheater() {
@@ -75,6 +77,10 @@ public class Bank {
         System.out.println("Account values: ");
         System.out.println("Customer: " + accounts.get("Customer"));
         System.out.println("Vendor: " + accounts.get("Vendor") + "\n");
+    }
+
+    public String getAccountValues() {
+        return ("Account values:\n Customer:" + getAccountBalance("Customer") + "\nVendor: " + getAccountBalance("Vendor"));
     }
 
     public boolean deductFromCustomerAccount(int amount) {
@@ -111,6 +117,7 @@ public class Bank {
             return false;
         }
     }
+
 
     private boolean isValidSignature(Order signedOrder) {
         PSSSigner signer = new PSSSigner(new RSAEngine(), new SHA1Digest(), 20);

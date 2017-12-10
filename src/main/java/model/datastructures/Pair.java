@@ -29,4 +29,17 @@ public class Pair {
         return left;
     }
 
+    public String toString() {
+        StringBuilder builder = new StringBuilder();
+        if (left != null) {
+            builder.append("(").append(new String(left)).append(", ");
+        }
+
+        if (right != null) {
+            builder.append(new String(right)).append(")");
+        }
+
+        return builder.toString();
+    }
+
 }

@@ -57,7 +57,17 @@ public class Bank {
 
     }
 
+    public int getAccountBalance(String name) {
+        int value = accounts.get(name);
 
+        if (name.equals("Customer")) {
+            return accounts.get("Customer");
+        } else if (name.equals("Vendor")) {
+            return accounts.get("Vendor");
+        } else {
+            throw new IllegalArgumentException();
+        }
+    }
 
     public void displayAccountValues() {
         System.out.println("Account values: ");
@@ -65,9 +75,14 @@ public class Bank {
         System.out.println("Vendor: " + accounts.get("Vendor") + "\n");
     }
 
-    private void deductFromCustomerAccount(int amount) {
+    public void deductFromCustomerAccount(int amount) {
         int newAccountValue = accounts.get("Customer") - amount;
         accounts.put("Customer", newAccountValue);
+    }
+
+    public void addToVendorAccount(int amount) {
+        int newAccountValue = accounts.get("Vendor") + amount;
+        accounts.put("Vendor", newAccountValue);
     }
 
     private void checkOrderAmounts(ArrayList<Order> orders) {
@@ -90,7 +105,12 @@ public class Bank {
         signer.init(false, keys.getPublic());
 
         signer.update(message, 0, message.length);
-        return signer.verifySignature(signature);
+
+        if (signer.verifySignature(signature)) {
+            accounts.put("Vendor", accounts.get("Vendor") + signedOrder.getAmount());
+            return true;
+        } else
+            return false;
     }
 
     private void checkInfo(String serialNumber, ArrayList<Pair> revealedStrings) {
@@ -103,6 +123,7 @@ public class Bank {
             System.out.println("See order before!");
         }
     }
+
 
     private void checkForFraud(ArrayList<Pair> storedStrings, ArrayList<Pair> revealedStrings) {
         if (isVendorCheating(storedStrings, revealedStrings)) {

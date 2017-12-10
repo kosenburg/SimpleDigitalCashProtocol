@@ -44,7 +44,6 @@ public class WordSplitter {
     }
 
     private void split(String string, int num_splits) {
-        System.out.println("Splitting pairs...");
         if (string.length() > PIECE_SIZE && num_splits <= MAX_SPLITS) {
             num_splits++;
             split(string.substring(0,string.length() / 2), num_splits);

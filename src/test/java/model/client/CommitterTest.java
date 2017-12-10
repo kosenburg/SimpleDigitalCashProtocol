@@ -14,10 +14,10 @@ class CommitterTest {
         Committer committer = new Committer(new String(randomKey.toByteArray()));
 
         String message = "MyMessage";
-        byte[] hash = committer.commit(message);
+        byte[] hash = committer.commit(message.getBytes());
         System.out.println();
 
-        byte[] hash2 = committer.commit(message);
+        byte[] hash2 = committer.commit(message.getBytes());
 
         Assertions.assertArrayEquals(hash, hash2);
     }

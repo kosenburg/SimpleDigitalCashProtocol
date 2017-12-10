@@ -47,6 +47,7 @@ public class TransactionProcessor {
     }
 
     private void sendToVendor() {
+        vendor.setOrder(signedOrder);
         revealedStrings = moneyOrderBuilder.getRequestedIdentityStrings(vendor.getIdentityStringChoices());
     }
 

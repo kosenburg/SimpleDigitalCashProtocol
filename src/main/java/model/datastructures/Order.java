@@ -8,8 +8,8 @@ public class Order implements Serializable{
     private String serialNumber;
     private int amount;
     private ArrayList<Pair> identityCommits;
-    private byte[] message;
-    private byte[] signature;
+    private byte[] message = null;
+    private byte[] signature = null;
 
     public Order(int amount, String serialNumber, byte[] message, ArrayList<Pair> identityCommits) {
         setAmount(amount);
@@ -20,6 +20,11 @@ public class Order implements Serializable{
 
     public void setSignature(byte[] signature) {
         this.signature = signature;
+    }
+
+    // Testing only
+    public Order(byte[] message) {
+        this.message = message;
     }
 
 
@@ -53,6 +58,10 @@ public class Order implements Serializable{
         } else {
             throw new IllegalArgumentException();
         }
+    }
+
+    public int getNumberOfCommitments() {
+        return identityCommits.size();
     }
 
     public byte[] getSignature() {

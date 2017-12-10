@@ -8,16 +8,13 @@ public class Vendor {
     private Order signedOrder;
     private Random random;
 
-    public Vendor(Order signedOrder) {
-        this.signedOrder = signedOrder;
+    public Vendor() {
         setRandomGenerator();
     }
 
-    //TODO remove constructor
-    public Vendor() {
-
+    public void setOrder(Order signedOrder) {
+        this.signedOrder = signedOrder;
     }
-
     private void setRandomGenerator() {
         random = new Random();
     }
@@ -31,10 +28,11 @@ public class Vendor {
     }
 
     private int[] generateRandomArray() {
-        int[] identityChoices = new int[signedOrder.getCommitment().size()];
-        for (int i = 0; i < signedOrder.getCommitment().size(); i++) {
+        int[] identityChoices = new int[signedOrder.getNumberOfCommitments()];
+        for (int i = 0; i < signedOrder.getNumberOfCommitments(); i++) {
             identityChoices[i] = random.nextInt(2);
         }
+
         return identityChoices;
     }
 }
